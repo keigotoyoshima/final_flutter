@@ -150,7 +150,7 @@ class RememberPage extends StatelessWidget {
                               ),
                               );
                               if(query != null){
-                                Navigator.pop(context, itemsRemember.elementAt((index)));
+                                Navigator.pop(context, query);
                               }
                             },
                           ),

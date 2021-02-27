@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> {
                                     queryParts: queryParts),
                             ),
                             );
+                            query = null;
                             itemsRemember.remove(result);
                             _formKey.currentState.reset();
                           }
@@ -115,6 +116,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
+
 
 
 

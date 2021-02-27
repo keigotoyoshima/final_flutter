@@ -76,7 +76,7 @@ class _RememberMeState extends State<RememberMe> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context, queryMeaning);
+                                Navigator.pop(context, widget.query);
                               },
                               child: const Text(
                                 '覚えたボタン',
