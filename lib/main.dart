@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   Response response;
 
   void getData() async{
-    response = await get('https://raw.githubusercontent.com/keigotoyoshima/flutter/main/json/data.json');
+    response = await get('https://raw.githubusercontent.com/keigotoyoshima/final_flutter/main/json/data.json');
   }
 
   @override

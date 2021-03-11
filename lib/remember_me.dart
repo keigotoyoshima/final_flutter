@@ -4,11 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class RememberMe extends StatefulWidget {
-
   RememberMe(this.query);
   final String query;
-
-
   @override
   _RememberMeState createState() => _RememberMeState();
 }

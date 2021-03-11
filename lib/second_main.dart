@@ -110,9 +110,10 @@ class SecondHomePageState extends State<SecondHomePage> {
 }
 
 class RememberPage extends StatelessWidget {
-  RememberPage({this.itemsRemember});
 
   final Set<String> itemsRemember;
+  RememberPage({this.itemsRemember});
+
 
 
   @override
