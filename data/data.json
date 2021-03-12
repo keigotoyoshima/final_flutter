@@ -1,23 +1,19 @@
-[
-  {
-  "name": "accept",
-  "a": "動詞",
-  "description": "受諾する"
+{
+  "accept": {
+    "a": "動詞",
+    "description": "受諾する"
   },
-  {
-  "name": "access",
-  "a": "動詞／名詞",
-  "description": "アクセスする／アクセス"
+  "access": {
+    "a": "動詞／名詞",
+    "description": "アクセスする／アクセス"
   },
-  {
-  "name": "account",
-  "a": "名詞",
-  "description": "アカウント、口座"
+  "account": {
+    "a": "名詞",
+    "description": "アカウント、口座"
   },
-  {
-  "name": "algorithm",
-  "a": "名詞",
-  "description": "アルゴリズム"
+  "algorithm": {
+    "a": "名詞",
+    "description": "アルゴリズム"
   }
 
-]
+}

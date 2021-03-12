@@ -19,7 +19,7 @@ class _RememberMeState extends State<RememberMe> {
 
 
   void getData() async{
-    response = await get('https://raw.githubusercontent.com/keigotoyoshima/flutter/main/json/data.json');
+    response = await get('https://github.com/keigotoyoshima/final_flutter/tree/main/data');
   }
 
   @override
