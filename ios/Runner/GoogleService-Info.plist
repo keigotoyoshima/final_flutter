@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>337412180039-oddguoueu0362o1kmi4si9n1srabc98a.apps.googleusercontent.com</string>
+	<string>260710204972-op1vkmvurkn0iqmcijpr2np3qomkm5ab.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.337412180039-oddguoueu0362o1kmi4si9n1srabc98a</string>
+	<string>com.googleusercontent.apps.260710204972-op1vkmvurkn0iqmcijpr2np3qomkm5ab</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD4d7Gf1Fcw_2Qb9FR-lY37OaN5ZVoXOvE</string>
+	<string>AIzaSyAx2oISo05TlP4k0d1cvmKcg-U6AmwLXWE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>337412180039</string>
+	<string>260710204972</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.keigoflashChat</string>
+	<string>com.keigo.finalflutteriosbuild</string>
 	<key>PROJECT_ID</key>
-	<string>my-project-199987</string>
+	<string>mindful-span-305604</string>
 	<key>STORAGE_BUCKET</key>
-	<string>my-project-199987.appspot.com</string>
+	<string>mindful-span-305604.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:337412180039:ios:7583d62c80b73c184c4962</string>
+	<string>1:260710204972:ios:aa409540be51ea7a88b389</string>
 </dict>
 </plist>

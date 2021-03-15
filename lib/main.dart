@@ -1,136 +1,119 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter_final/second_main.dart';
-import 'package:http/http.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_final/sub_main.dart';
+import 'package:flutter_final/screen/remember_me.dart';
+import 'login_and_register/login_register_widet.dart';
+import 'login_and_register/register_page.dart';
+import 'login_and_register/login_page.dart';
+import 'second_main.dart';
+import 'screen/search_page_card.dart';
 
-void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  static const String _title = 'Flutter Code Sample';
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(App());
+}
+
+class App extends StatelessWidget {
+  // Create the initialization Future outside of `build`:
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      home: HomePage(),
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return Text('snapshot has error', style: TextStyle(fontSize: 80),);
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return FlashChat();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return CircularProgressIndicator();
+      },
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+
+class FlashChat extends StatelessWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+          primaryColor: Colors.red,
+          primarySwatch: Colors.red
+      ),
+      initialRoute: '/',
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        '/': (context) => WelcomeScreen(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/home': (context) => HomePage(),
+        '/searchCard': ( context) => SearchPageCard(),
+        '/secondHome':(context) => SecondHomePage(),
+        '/login': (context) => LoginScreen(),
+        '/registration': (context) => RegistrationScreen(),
+        '/rememberMe':(context) => RememberMe(),
+      },
+
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage> {
-  Response response;
 
-  void getData() async{
-    response = await get('https://raw.githubusercontent.com/keigotoyoshima/final_flutter/main/json/data.json');
-  }
-
+class WelcomeScreen extends StatefulWidget {
   @override
-  void initState(){
-    super.initState();
-    getData();
-  }
+  _WelcomeScreenState createState() => _WelcomeScreenState();
+}
 
-
-  List<String> itemsHistory = [];
-  Set<String> itemsRemember = {};
-  int lastNumber = 0;
-  final _formKey = GlobalKey<FormState>();
-  String query;
-  String queryMeaning ;
-  String queryParts ;
-  List<dynamic> _data ;
-
-
-  Future<void> loadJsonAsset(String query) async {
-    final jsonResponse = json.decode(response.body);
-    _data = jsonResponse[query];
-    queryMeaning = _data[0]['description'];
-    queryParts = _data[0]['a'];
-    itemsHistory.add(query);
-    itemsRemember.add(query);
-  }
-
+class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text('検索'),
-      ),
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Form(
-                key: _formKey,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      TextFormField(
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: '検索',
-                          border: OutlineInputBorder(),
-                          filled: true,
-                        ),
-                        onChanged: (value) {
-                          query = value;
-                        },
+        padding: EdgeInsets.fromLTRB(30, 200, 30, 250),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.only(right:20.0),
 
-                      ),
-                      TextButton(
-                        onPressed: () async{
-                          if(query != null) {
-                            loadJsonAsset(query);
-                            final result = await Navigator.push(
-                              context, MaterialPageRoute(builder: (context) =>
-                                SecondHomePage(itemsRemember: itemsRemember,
-                                    itemsHistory: itemsHistory,
-                                    queryMeaning: queryMeaning,
-                                    queryParts: queryParts),
-                            ),
-                            );
-                            query = null;
-                            itemsRemember.remove(result);
-                            _formKey.currentState.reset();
-                          }
-                        },
-                        child: Text(
-                          'Search&navi',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-
-
-
-
-                    ]
-
-                ),
               ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
 
+            LoginRegisterWidget(
+              color: Colors.lightBlueAccent,
+              onPress:(){
+                Navigator.pushNamed(context, '/login');
+              },
+              text: 'Log In',
+            ),
+            LoginRegisterWidget(
+                color: Colors.blueAccent,
+                onPress: () {
+                  Navigator.pushNamed(
+                      context,
+                      '/registration',
+                  );
+                },
+                text:  'Register')
 
-            ],
-
-          ),
+          ],
         ),
-
       ),
     );
   }

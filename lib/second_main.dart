@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_final/remember_me.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_final/sub_main.dart';
+import 'screen/search_page_card.dart';
+import 'screen/history_page.dart';
+import 'screen/remember_page.dart';
 
 class SecondHomePage extends StatefulWidget {
-  SecondHomePage({Key key,this.itemsHistory, this.itemsRemember, this.queryParts, this.queryMeaning }) : super(key: key);
 
-  final String queryParts;
-  final String queryMeaning;
-  final List<String> itemsHistory;
-  final Set<String> itemsRemember;
 
   @override
   State createState() {
@@ -17,49 +17,41 @@ class SecondHomePage extends StatefulWidget {
 
 
 class SecondHomePageState extends State<SecondHomePage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+  User loggedInUser;
+  String textMessage;
+
   String query;
   int _selectedIndex = 0;
   PageController _pageController;
-  static String queryMeaning;
-  static String queryParts;
-  static List<String> itemsHistory;
-  static Set<String> itemsRemember;
-
-  void change() {
-    itemsHistory =  widget.itemsHistory;
-    itemsRemember = widget.itemsRemember;
-    queryMeaning = widget.queryMeaning;
-    queryParts = widget.queryParts;
-  }
 
   @override
   void initState() {
     super.initState();
+    getCurrentUser();
     _pageController = PageController(
       initialPage: _selectedIndex,
     );
-    change();
-    setState(() {
-      _pageList[0] = SearchPageCard(queryMeaning: queryMeaning, queryParts: queryParts);
-      _pageList[1] = HistoryPage(itemsHistory: itemsHistory);
-      _pageList[2] = RememberPage(itemsRemember: itemsRemember);
-    });
+  }
+
+  void getCurrentUser(){
+    final user = _auth.currentUser;
+    if(user != null){
+      loggedInUser = user;
+      print(loggedInUser.email);
+    }
   }
 
 
 
   List<Widget> _pageList = [
-    SearchPageCard(queryMeaning: queryMeaning, queryParts: queryParts),
-    HistoryPage(itemsHistory: itemsHistory),
-    RememberPage(itemsRemember: itemsRemember)
+    HomePage(),
+    // SearchPageCard(),
+    HistoryPage(),
+    RememberPage(),
   ];
 
-  void _onPageChanged(int index) {
-    setState(() {
-
-      _selectedIndex = index;
-    });
-  }
 
 
   @override
@@ -75,7 +67,6 @@ class SecondHomePageState extends State<SecondHomePage> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        onPageChanged: _onPageChanged,
         children: _pageList,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -88,7 +79,7 @@ class SecondHomePageState extends State<SecondHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            title: Text('History'),
+            title: Text('Friends'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.auto_awesome),
@@ -97,7 +88,9 @@ class SecondHomePageState extends State<SecondHomePage> {
         ],
         currentIndex: _selectedIndex,
         onTap: (index) {
-          _selectedIndex = index;
+          setState(() {
+            _selectedIndex = index;
+          });
 
           _pageController.animateToPage(index,
               duration: Duration(milliseconds: 10), curve: Curves.easeIn);
@@ -107,165 +100,4 @@ class SecondHomePageState extends State<SecondHomePage> {
     );
   }
 
-}
-
-class RememberPage extends StatelessWidget {
-
-  final Set<String> itemsRemember;
-  RememberPage({this.itemsRemember});
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-
-        title: Text('Remember'),
-
-      ),
-      body: ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: itemsRemember == null ? 0 : itemsRemember.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Card(
-                        child: Container(
-                          child: ListTile(
-                            leading: null,
-                            title: Text(
-                                index.toString() + ", " + itemsRemember.elementAt(index),
-                                style: TextStyle(
-                                    fontSize: 20.0, color: Colors.black)
-                            ),
-
-                            onTap: () async{
-                              final query = await Navigator.push(
-                                context, MaterialPageRoute(builder:(context) => RememberMe(itemsRemember.elementAt(index)),
-                              ),
-                              );
-                              if(query != null){
-                                Navigator.pop(context, query);
-                              }
-                            },
-                          ),
-                          // added padding
-                          padding: const EdgeInsets.all(15.0),
-                        ),
-                      )
-                    ],
-                  )),
-            );
-          }),
-
-    );
-  }
-}
-
-
-class HistoryPage extends StatelessWidget {
-
-
-  HistoryPage({this.itemsHistory});
-  final List<String> itemsHistory;
-
-
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-
-        title: Text('History'),
-
-      ),
-      body: ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: itemsHistory == null ? 0 : itemsHistory.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Card(
-                        child: Container(
-                          child: ListTile(
-                              leading: null,
-                              title: Text(
-                                  index.toString()+ ", " + itemsHistory[index] ,
-                                  style: TextStyle(
-                                      fontSize: 20.0, color: Colors.black)
-                              ),
-
-                              onTap: () {
-                              }
-                          ),
-                          // added padding
-                          padding: const EdgeInsets.all(15.0),
-                        ),
-                      )
-                    ],
-                  )),
-            );
-          }),
-
-    );
-  }
-}
-
-class SearchPageCard extends StatelessWidget {
-  SearchPageCard({this.queryMeaning,this.queryParts});
-  final String queryMeaning;
-  final String queryParts;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Search'),
-        ),
-        body:Container(
-          child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment
-                    .stretch,
-                children: <Widget>[
-                  Card(
-                    child: Container(
-                      child: ListTile(
-                          leading: null,
-                          title: Text(
-                              "品詞:  " + queryParts,
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.black)
-                          ),
-                          subtitle: Text(
-                              "意味:  " + queryMeaning,
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.black)
-                          ),
-                          onTap: () {
-
-                          }
-                      ),
-                      // added padding
-                    ),
-                  ),
-                ],
-              )),
-        )
-    );
-  }
 }

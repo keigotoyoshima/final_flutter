@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:http/http.dart'as http;
 import 'package:http/http.dart';
+import 'remember_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class RememberMe extends StatefulWidget {
-  RememberMe(this.query);
-  final String query;
+
+
   @override
   _RememberMeState createState() => _RememberMeState();
 }
@@ -14,12 +18,17 @@ class _RememberMeState extends State<RememberMe> {
 
   String queryMeaning = "???";
   String queryParts  = "???";
-  List<dynamic> _data ;
+  Map<String, dynamic> _data ;
   Response response;
 
+  final CollectionReference users = FirebaseFirestore.instance.collection(
+      'remember');
 
-  void getData() async{
-    response = await get('https://github.com/keigotoyoshima/final_flutter/tree/main/data');
+
+
+  void getData() async {
+    response =
+    await http.get(Uri.https('raw.githubusercontent.com', 'keigotoyoshima/final_flutter/main/data/data.json'));
   }
 
   @override
@@ -30,8 +39,8 @@ class _RememberMeState extends State<RememberMe> {
   Future<void> loadJsonAsset(String query) async {
     final jsonResponse = json.decode(response.body);
     _data = jsonResponse[query];
-    queryMeaning = _data[0]['description'];
-    queryParts = _data[0]['a'];
+    queryMeaning = _data['description'];
+    queryParts = _data['a'];
   }
 
 
@@ -40,6 +49,7 @@ class _RememberMeState extends State<RememberMe> {
 
   @override
   Widget build(BuildContext context) {
+    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue,
@@ -73,7 +83,10 @@ class _RememberMeState extends State<RememberMe> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context, widget.query);
+                                users.doc(args.id).delete().then((value) => print("User Deleted"))
+                                    .catchError((error) => print("Failed to delete user: $error"));
+                                Navigator.pop(context, null);
+
                               },
                               child: const Text(
                                 '覚えたボタン',
@@ -84,7 +97,8 @@ class _RememberMeState extends State<RememberMe> {
                             TextButton(
                               onPressed: () {
                                 setState(() {
-                                  loadJsonAsset(widget.query);
+                                  queryParts = args.meaning;
+                                  queryMeaning = args.query;
                                 });
                               },
                               child: const Text(
