@@ -46,7 +46,7 @@ class _HistoryPageState extends State<HistoryPage> {
 class UserInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Query collectionReference = FirebaseFirestore.instance.collection("history").orderBy('time');
+    Query collectionReference = FirebaseFirestore.instance.collection("chat").orderBy('time');
     return StreamBuilder<QuerySnapshot>(
       stream: collectionReference.snapshots(),
       builder: (BuildContext context,  snapshot) {

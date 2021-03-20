@@ -66,12 +66,12 @@ class _RememberPageState extends State<RememberPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: (){
-                    Navigator.pushNamed(context, '/rememberMe', arguments:ScreenArguments(document.data()['description'], document.data()['a'], document.id));
+                    Navigator.pushNamed(context, '/rememberMe', arguments:ScreenArguments(document.data()['description'], document.data()['meaning'],document.data()['part'], document.id));
                   },
                   child: ListTile(
                     tileColor: Colors.blue[100],
                     title: Text(document.data()['description'],style: TextStyle(fontSize: 30),),
-                    subtitle:  Text(document.data()['a']),
+                    subtitle:  Text(document.data()['part']),
                   ),
                 ),
               );
@@ -85,10 +85,11 @@ class _RememberPageState extends State<RememberPage> {
 
 
   class ScreenArguments {
-  final String query;
+  final String description;
   final String meaning;
+  final String part;
   final String id;
 
-  ScreenArguments(this.query, this.meaning, this.id);
+  ScreenArguments(this.description, this.meaning, this.part, this.id);
 }
 

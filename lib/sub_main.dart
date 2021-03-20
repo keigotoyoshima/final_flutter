@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                              await loadJsonAsset(query);
                             _controller.clear();
                             time = DateTime.now();
-                            _firestore.collection('history').add({
+                            _firestore.collection('chat').add({
                               'description' : query,
                               'word': queryMeaning,
                               'a' : queryParts,
@@ -108,7 +108,9 @@ class _HomePageState extends State<HomePage> {
                                 .catchError((error) => print("Failed to add user: $error"));
                             _firestore.collection('remember').add({
                               'description' : query,
-                              'a' : queryParts,
+                              'meaning' : queryMeaning,
+                              'part':queryParts,
+
                             })
                                 .then((value) => print("User Added"))
                                 .catchError((error) => print("Failed to add user: $error"));

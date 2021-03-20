@@ -7,6 +7,7 @@ import 'login_and_register/register_page.dart';
 import 'login_and_register/login_page.dart';
 import 'second_main.dart';
 import 'screen/search_page_card.dart';
+import 'package:provider/provider.dart';
 
 
 void main() {
@@ -45,24 +46,27 @@ class App extends StatelessWidget {
 class FlashChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          primaryColor: Colors.red,
-          primarySwatch: Colors.red
-      ),
-      initialRoute: '/',
-      routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => WelcomeScreen(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        '/home': (context) => HomePage(),
-        '/searchCard': ( context) => SearchPageCard(),
-        '/secondHome':(context) => SecondHomePage(),
-        '/login': (context) => LoginScreen(),
-        '/registration': (context) => RegistrationScreen(),
-        '/rememberMe':(context) => RememberMe(),
-      },
+    return ChangeNotifierProvider(
+      create: (context) => Data(),
+      child: MaterialApp(
+        theme: ThemeData(
+            primaryColor: Colors.red,
+            primarySwatch: Colors.red
+        ),
+        initialRoute: '/',
+        routes: {
+          // When navigating to the "/" route, build the FirstScreen widget.
+          '/': (context) => WelcomeScreen(),
+          // When navigating to the "/second" route, build the SecondScreen widget.
+          '/home': (context) => HomePage(),
+          '/searchCard': ( context) => SearchPageCard(),
+          '/secondHome':(context) => SecondHomePage(),
+          '/login': (context) => LoginScreen(),
+          '/registration': (context) => RegistrationScreen(),
+          '/rememberMe':(context) => RememberMe(),
+        },
 
+      ),
     );
   }
 }
@@ -118,3 +122,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 }
+
+class Data extends ChangeNotifier{
+  String description = "???";
+  String part  = "???";
+
+  void changeString(String des, String par){
+    description = des;
+    part = par;
+    notifyListeners();
+  }
+
+}
+

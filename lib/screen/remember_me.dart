@@ -5,6 +5,8 @@ import 'package:http/http.dart'as http;
 import 'package:http/http.dart';
 import 'remember_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_final/main.dart';
 
 
 class RememberMe extends StatefulWidget {
@@ -16,8 +18,7 @@ class RememberMe extends StatefulWidget {
 
 class _RememberMeState extends State<RememberMe> {
 
-  String queryMeaning = "???";
-  String queryParts  = "???";
+
   Map<String, dynamic> _data ;
   Response response;
 
@@ -35,12 +36,6 @@ class _RememberMeState extends State<RememberMe> {
   void initState(){
     super.initState();
     getData();
-  }
-  Future<void> loadJsonAsset(String query) async {
-    final jsonResponse = json.decode(response.body);
-    _data = jsonResponse[query];
-    queryMeaning = _data['description'];
-    queryParts = _data['a'];
   }
 
 
@@ -65,9 +60,9 @@ class _RememberMeState extends State<RememberMe> {
                       children: [
                         ListTile(
                           leading: null,
-                          title: Text("意味: "+queryMeaning),
+                          title: Text("意味: "+ Provider.of<Data>(context).description),
                           subtitle: Text(
-                            "品詞: "+queryParts,
+                            "品詞: "+Provider.of<Data>(context).part,
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
@@ -96,10 +91,7 @@ class _RememberMeState extends State<RememberMe> {
 
                             TextButton(
                               onPressed: () {
-                                setState(() {
-                                  queryParts = args.meaning;
-                                  queryMeaning = args.query;
-                                });
+                                Provider.of<Data>(context, listen: false).changeString(args.meaning, args.part);
                               },
                               child: const Text(
                                 '表示',
