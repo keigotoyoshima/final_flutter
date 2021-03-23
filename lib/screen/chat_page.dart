@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 User loggedInUser;
-class HistoryPage extends StatefulWidget {
+class ChatPage extends StatefulWidget {
 
   @override
-  _HistoryPageState createState() => _HistoryPageState();
+  _ChatPageState createState() => _ChatPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _ChatPageState extends State<ChatPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
 

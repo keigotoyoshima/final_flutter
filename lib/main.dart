@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_final/sub_main.dart';
+import 'package:flutter_final/screen/setting_page.dart';
+import 'package:flutter_final/screen/search_page.dart';
 import 'package:flutter_final/screen/remember_me.dart';
 import 'login_and_register/login_register_widet.dart';
 import 'login_and_register/register_page.dart';
@@ -8,11 +9,12 @@ import 'login_and_register/login_page.dart';
 import 'second_main.dart';
 import 'screen/search_page_card.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(App());
+  runApp(RestartWidget(child: App()));
 }
 
 class App extends StatelessWidget {
@@ -58,12 +60,13 @@ class FlashChat extends StatelessWidget {
           // When navigating to the "/" route, build the FirstScreen widget.
           '/': (context) => WelcomeScreen(),
           // When navigating to the "/second" route, build the SecondScreen widget.
-          '/home': (context) => HomePage(),
+          '/home': (context) => SearchPage(),
           '/searchCard': ( context) => SearchPageCard(),
           '/secondHome':(context) => SecondHomePage(),
           '/login': (context) => LoginScreen(),
           '/registration': (context) => RegistrationScreen(),
           '/rememberMe':(context) => RememberMe(),
+          '/setting':(context) => SettingPage(),
         },
 
       ),
@@ -115,7 +118,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   );
                 },
                 text:  'Register')
-
           ],
         ),
       ),
@@ -123,9 +125,66 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 }
 
+class RestartWidget extends StatefulWidget {
+  RestartWidget({this.child});
+
+  final Widget child;
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_RestartWidgetState>().restartApp();
+  }
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
+  }
+}
+
 class Data extends ChangeNotifier{
   String description = "???";
   String part  = "???";
+  String randomString = "remember";
+  var set = <String>{};
+
+  void changeCollectionName(){
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+
+    String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+        length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+    randomString = getRandomString(10);
+    notifyListeners();
+  }
+
+
+
+  void addSet(String query){
+    set.add(query);
+    int len = set.length;
+    print('add set query' + len.toString());
+    notifyListeners();
+  }
+  void resetSet(){
+    set.clear();
+    print('reset!');
+  }
 
   void changeString(String des, String par){
     description = des;

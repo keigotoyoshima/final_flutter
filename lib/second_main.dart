@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_final/sub_main.dart';
-import 'screen/search_page_card.dart';
-import 'screen/history_page.dart';
+import 'package:flutter_final/screen/setting_page.dart';
+import 'package:flutter_final/screen/search_page.dart';
+import 'screen/chat_page.dart';
 import 'screen/remember_page.dart';
 
 class SecondHomePage extends StatefulWidget {
@@ -46,10 +46,10 @@ class SecondHomePageState extends State<SecondHomePage> {
 
 
   List<Widget> _pageList = [
-    HomePage(),
-    // SearchPageCard(),
-    HistoryPage(),
+    SearchPage(),
+    ChatPage(),
     RememberPage(),
+    SettingPage(),
   ];
 
 
@@ -70,20 +70,29 @@ class SecondHomePageState extends State<SecondHomePage> {
         children: _pageList,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        // fixedColor: Colors.grey,
         backgroundColor: Colors.grey,
         selectedItemColor: Colors.blueAccent,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            backgroundColor: Colors.grey,
             icon: Icon(Icons.search),
             title: Text('Search'),
           ),
           BottomNavigationBarItem(
+            backgroundColor: Colors.grey,
             icon: Icon(Icons.history),
             title: Text('Friends'),
           ),
           BottomNavigationBarItem(
+            backgroundColor: Colors.grey,
             icon: Icon(Icons.auto_awesome),
             title: Text('Remember'),
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Colors.grey,
+            icon: Icon(Icons.settings),
+            title: Text('Setting'),
           ),
         ],
         currentIndex: _selectedIndex,

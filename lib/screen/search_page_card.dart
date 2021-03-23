@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_final/sub_main.dart';
+import 'package:flutter_final/screen/search_page.dart';
 
 class SearchPageCard extends StatelessWidget {
 

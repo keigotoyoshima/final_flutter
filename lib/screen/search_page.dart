@@ -6,14 +6,17 @@ import 'package:http/http.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_final/main.dart';
 
-
-class HomePage extends StatefulWidget {
+class SearchPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _SearchPageState extends State<SearchPage> {
+
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   var _controller = TextEditingController();
@@ -49,15 +52,24 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> loadJsonAsset(String query) async {
+  Future<String> loadJsonAsset(String query) async {
     final jsonResponse = json.decode(response.body);
-    _data = jsonResponse[query];
-    queryMeaning = _data['description'];
-    queryParts = _data['a'];
+    try {
+      _data = jsonResponse[query];
+      queryMeaning = _data['description'];
+      queryParts = _data['a'];
+    } catch(e){
+      print(e);
+      return null;
+    }
+    return query;
   }
 
   @override
   Widget build(BuildContext context) {
+    String collectionName = Provider.of<Data>(context).randomString;
+    int setOfLength = Provider.of<Data>(context).set.length;
+    var set = Provider.of<Data>(context).set;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -82,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.search),
-                          hintText: '検索',
+                          hintText: Provider.of<Data>(context).set.length.toString(),
                           border: OutlineInputBorder(),
                           filled: true,
                         ),
@@ -93,7 +105,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                       TextButton(
                         onPressed: () async{
-                          if(query != null) {
+                          String value;
+                          if(query != null)  value = await loadJsonAsset(query);
+
+                          if(value != null) {
                              await loadJsonAsset(query);
                             _controller.clear();
                             time = DateTime.now();
@@ -104,17 +119,24 @@ class _HomePageState extends State<HomePage> {
                               'time': time,
                               'sender': loggedInUser.email,
                             })
-                                .then((value) => print("User Added"))
+                                .then((value) => print("User Added history: $value"))
                                 .catchError((error) => print("Failed to add user: $error"));
-                            _firestore.collection('remember').add({
-                              'description' : query,
-                              'meaning' : queryMeaning,
-                              'part':queryParts,
-
-                            })
-                                .then((value) => print("User Added"))
-                                .catchError((error) => print("Failed to add user: $error"));
-
+                            int first = setOfLength;
+                            print(first.toString()+' first ');
+                            set.add(query);
+                            Provider.of<Data>(context, listen: false).addSet(query);
+                            int second = set.length;
+                            print(second.toString()+' second');
+                            if(first != second){
+                              print('remember output '+collectionName);
+                              _firestore.collection(collectionName).add({
+                                'description' : query,
+                                'meaning' : queryMeaning,
+                                'part':queryParts,
+                              })
+                                  .then((value) => print("User Added remember: $value"))
+                                  .catchError((error) => print("Failed to add user: $error"));
+                            }
                             _formKey.currentState.reset();
                              Navigator.pushNamed(
                                context,
@@ -122,6 +144,8 @@ class _HomePageState extends State<HomePage> {
                                arguments: SearchData(queryMeaning: queryMeaning, queryParts: queryParts)
                              );
 
+                          }else{
+                            print('error catch');
                           }
                         },
                         child: Text(
