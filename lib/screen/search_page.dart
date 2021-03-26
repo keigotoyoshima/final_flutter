@@ -15,8 +15,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   var _controller = TextEditingController();
@@ -94,7 +92,7 @@ class _SearchPageState extends State<SearchPage> {
                         },
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.search),
-                          hintText: Provider.of<Data>(context).set.length.toString(),
+                          hintText: 'search',
                           border: OutlineInputBorder(),
                           filled: true,
                         ),
@@ -126,7 +124,7 @@ class _SearchPageState extends State<SearchPage> {
                             set.add(query);
                             Provider.of<Data>(context, listen: false).addSet(query);
                             int second = set.length;
-                            print(second.toString()+' second');
+                             print(second.toString()+' second');
                             if(first != second){
                               print('remember output '+collectionName);
                               _firestore.collection(collectionName).add({

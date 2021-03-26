@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 User loggedInUser;
 class ChatPage extends StatefulWidget {
@@ -14,10 +15,14 @@ class _ChatPageState extends State<ChatPage> {
   final _auth = FirebaseAuth.instance;
 
 
+
+
   @override
   void initState() {
     super.initState();
     getCurrentUser();
+
+
   }
   void getCurrentUser(){
     final user = _auth.currentUser;
@@ -43,10 +48,20 @@ class _ChatPageState extends State<ChatPage> {
   }
 }
 
-class UserInformation extends StatelessWidget {
+class UserInformation extends StatefulWidget {
+  @override
+  _UserInformationState createState() => _UserInformationState();
+}
+
+class _UserInformationState extends State<UserInformation> {
+
+  ScrollController _scrollController;
+  final double maxScrollExtent = 0.0;
+
+
   @override
   Widget build(BuildContext context) {
-    Query collectionReference = FirebaseFirestore.instance.collection("chat").orderBy('time');
+    Query collectionReference = FirebaseFirestore.instance.collection("chat").orderBy('time', descending: true);
     return StreamBuilder<QuerySnapshot>(
       stream: collectionReference.snapshots(),
       builder: (BuildContext context,  snapshot) {
@@ -57,7 +72,8 @@ class UserInformation extends StatelessWidget {
           return CircularProgressIndicator();
         }
         return  ListView(
-          reverse: false,
+          reverse: true,
+          shrinkWrap: true,
           children: snapshot.data.docs.map((DocumentSnapshot document) {
             return  Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
